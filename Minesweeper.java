@@ -8,6 +8,7 @@ public class Minesweeper {
     private final char[][] board;
     private final boolean[][] mineLocations;
     private final boolean[][] revealed;
+    private final BoardDisplay boardDisplay;
     private int uncoveredCount;
 
     public Minesweeper(int rows, int cols, int minesCount) {
@@ -18,6 +19,7 @@ public class Minesweeper {
         this.mineLocations = new boolean[rows][cols];
         this.revealed = new boolean[rows][cols];
         this.uncoveredCount = 0;
+        this.boardDisplay = new BoardDisplay(this.board);
         initializeBoard();
         placeMines();
     }
@@ -45,15 +47,6 @@ public class Minesweeper {
         }
     }
 
-    private void printBoard() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                System.out.print(board[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
-
     private boolean isValidCoordinate(int row, int col) {
         return row >= 0 && row < rows && col >= 0 && col < cols;
     }
@@ -75,11 +68,12 @@ public class Minesweeper {
             revealed[row][col] = true;
             if (mineLocations[row][col]) {
                 System.out.println("Game Over! You hit a mine!");
-                printBoard();
+                boardDisplay.updateButton(row, col, 'X');
                 System.exit(0);
             } else {
                 int adjacentMines = countAdjacentMines(row, col);
                 board[row][col] = (char) (adjacentMines + '0');
+                boardDisplay.updateButton(row, col, board[row][col]);
                 uncoveredCount++;
                 if (adjacentMines == 0) {
                     for (int i = row - 1; i <= row + 1; i++) {
@@ -99,14 +93,12 @@ public class Minesweeper {
     public void play() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            printBoard();
             System.out.print("Enter row and column (e.g., 1 2): ");
             int row = scanner.nextInt();
             int col = scanner.nextInt();
             revealCell(row, col);
             if (isGameWon()) {
                 System.out.println("Congratulations! You've cleared all non-mine cells.");
-                printBoard();
                 break;
             }
         }

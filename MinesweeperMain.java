@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class MinesweeperMain {
+class MinesweeperMain {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -15,4 +15,3 @@ public class MinesweeperMain {
         game.play();
     }
 }
-
